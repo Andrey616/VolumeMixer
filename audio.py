@@ -3,11 +3,11 @@ from pycaw.pycaw import AudioUtilities, ISimpleAudioVolume
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtSerialPort import QSerialPort, QSerialPortInfo
 from PyQt5.QtCore import QIODevice
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from comtypes import CLSCTX_ALL
 import serial
 import time
 import serial.tools.list_ports
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from comtypes import CLSCTX_ALL
 import os
 
 keyEnc5 = 0
