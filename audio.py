@@ -131,7 +131,7 @@ port = ""
 baudrate = 9600
 
 for i in list(serial.tools.list_ports.comports()):
-    if 'USB-SERIAL' in i.description:
+    if 'USB-SERIAL' in i.description and i.device != 'COM12':
         port = i.device
 
 while True:
@@ -152,7 +152,7 @@ while True:
         os.system('cls||clear')
         print("\033[91mОшибка подключения к порту. Попытка переподулючения..", end="\r")
         for i in list(serial.tools.list_ports.comports()):
-            if 'USB-SERIAL' in i.description:
+            if 'USB-SERIAL' in i.description and i.device != 'COM12':
                 port = i.device
         continue
     

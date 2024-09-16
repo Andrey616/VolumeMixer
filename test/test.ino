@@ -13,7 +13,7 @@ unsigned long timer_Slider;
 #define DATA_PIN 8
 CRGB leds[NUM_LEDS];
 
-int mode = 5;
+int mode = 1;
 int hell = 40;
 int pos = 0;
 int direction = 1;
@@ -62,6 +62,7 @@ String fixVal[4] = {};
 void from_red_to_green(){ //режим свечения от красного к зелёному +
   for (int i = 0; i < 5; i++) {
     // Вычисляем цвет для каждого светодиода
+    if (mode != 0){clearLed(); break;}
     int red = map(i, 0, 4, 0, 255);
     int green = 255 - red;
     leds[i] = CRGB(red, green, 0); 
@@ -82,18 +83,23 @@ void smooth_running_rainbow(int speed){  //плавная бегущая рад�
     timer_smooth_running_rainbow = millis();
     for (int i = NUM_LEDS - 1; i > 19; i--) {
       leds[i] = leds[i - 1];
+      if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 1; i < 5; i++) {
       leds[19 - i] = leds[20+i];
+      if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 14; i > 9; i--) {
       leds[i] = leds[i + 10];
+      if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 1; i < 5; i++) {
       leds[9 - i] = leds[10+i];
+      if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 4; i > 0; i--) {
       leds[i] = leds[i + 10];
+      if (mode != 1 & mode != 2){clearLed(); break;}
     }
     int hue = millis() / 20 % 255;
     leds[0] = CHSV(hue, 255, 255);
@@ -113,6 +119,7 @@ void smooth_rainbow(){  //плавная радуга
   if (millis() - timer_smooth_rainbow > 20){
     timer_smooth_rainbow = millis();
     for (int i = 0; i < 256; i++) {
+      if (mode != 3){clearLed(); break;}
       for (int j = 0; j < NUM_LEDS; j++) {
         leds[j] = CHSV(i, 255, 255);
         readEncod();
@@ -127,6 +134,7 @@ void smooth_rainbow(){  //плавная радуга
 
 void paint_the_tape_in(){  // покарсить всё в один цвет
   for (int i = 0; i < NUM_LEDS; i++) {
+    if (mode != 4){clearLed(); break;}
     leds[i] = CRGB(0x53, 0x25, 0xA4); 
     FastLED.setBrightness(hell);
     readEncod();
@@ -139,6 +147,7 @@ void paint_the_tape_in(){  // покарсить всё в один цвет
 void running_lights(){ // бегущие огни
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 256; j++) {
+      if (mode != 5){clearLed(); break;}
       readEncod();
       readSlider();
       sendValues();
@@ -151,6 +160,7 @@ void running_lights(){ // бегущие огни
       FastLED.show();
     }
     for (int j = 255; j >= 0; j--) {
+      if (mode != 5){clearLed(); break;}
       readEncod();
       readSlider();
       sendValues();
@@ -224,7 +234,7 @@ void readEncod(){ // прочитать значение с энкодеров
 
 
   if (enc3.isTurn() && keyMode == 1){
-    if (enc3.isRight() && mode < 10) mode++;
+    if (enc3.isRight() && mode < 5) mode++;
     if (enc3.isLeft() && mode > 0) mode--;
     writeHellMode();
   }
@@ -327,6 +337,11 @@ void sendValues(){ // отправить значение в порте если
     }
   }  
   
+}
+
+void clearLed(){
+  FastLED.clear();
+  FastLED.show();
 }
 
 void setup() { 
