@@ -135,7 +135,7 @@ void smooth_rainbow(){  //плавная радуга
 void paint_the_tape_in(){  // покарсить всё в один цвет
   for (int i = 0; i < NUM_LEDS; i++) {
     if (mode != 4){clearLed(); break;}
-    leds[i] = CRGB(0x53, 0x25, 0xA4); 
+    leds[i] = CRGB(255, 0, 250); 
     FastLED.setBrightness(hell);
     readEncod();
     readSlider();
