@@ -29,17 +29,27 @@ String Slider1;
 String Slider2;
 String Slider3;
 String Slider4;
+
 int ReadSlider0;
 int ReadSlider1;
 int ReadSlider2;
 int ReadSlider3;
 int ReadSlider4;
 
-int MaxSlider0;
-int MaxSlider1;
-int MaxSlider2;
-int MaxSlider3;
-int MaxSlider4;
+
+int kol_ReadSlider;
+int sum_ReadSlider0;
+int sum_ReadSlider1;
+int sum_ReadSlider2;
+int sum_ReadSlider3;
+int sum_ReadSlider4;
+
+int ser_ReadSlider0;
+int ser_ReadSlider1;
+int ser_ReadSlider2;
+int ser_ReadSlider3;
+int ser_ReadSlider4;
+
 String FulEnc;
 String FulEnclast;
 
@@ -62,7 +72,7 @@ String fixVal[4] = {};
 void from_red_to_green(){ //режим свечения от красного к зелёному +
   for (int i = 0; i < 5; i++) {
     // Вычисляем цвет для каждого светодиода
-    if (mode != 0){clearLed(); break;}
+    //if (mode != 0){clearLed(); break;}
     int red = map(i, 0, 4, 0, 255);
     int green = 255 - red;
     leds[i] = CRGB(red, green, 0); 
@@ -83,23 +93,23 @@ void smooth_running_rainbow(int speed){  //плавная бегущая рад�
     timer_smooth_running_rainbow = millis();
     for (int i = NUM_LEDS - 1; i > 19; i--) {
       leds[i] = leds[i - 1];
-      if (mode != 1 & mode != 2){clearLed(); break;}
+      //if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 1; i < 5; i++) {
       leds[19 - i] = leds[20+i];
-      if (mode != 1 & mode != 2){clearLed(); break;}
+      //if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 14; i > 9; i--) {
       leds[i] = leds[i + 10];
-      if (mode != 1 & mode != 2){clearLed(); break;}
+      //if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 1; i < 5; i++) {
       leds[9 - i] = leds[10+i];
-      if (mode != 1 & mode != 2){clearLed(); break;}
+      //if (mode != 1 & mode != 2){clearLed(); break;}
     }
     for (int i = 4; i > 0; i--) {
       leds[i] = leds[i + 10];
-      if (mode != 1 & mode != 2){clearLed(); break;}
+      //if (mode != 1 & mode != 2){clearLed(); break;}
     }
     int hue = millis() / 20 % 255;
     leds[0] = CHSV(hue, 255, 255);
@@ -119,7 +129,9 @@ void smooth_rainbow(){  //плавная радуга
   if (millis() - timer_smooth_rainbow > 20){
     timer_smooth_rainbow = millis();
     for (int i = 0; i < 256; i++) {
-      if (mode != 3){clearLed(); break;}
+      if (mode != 3){
+        //clearLed(); 
+        break;}
       for (int j = 0; j < NUM_LEDS; j++) {
         leds[j] = CHSV(i, 255, 255);
         readEncod();
@@ -134,8 +146,11 @@ void smooth_rainbow(){  //плавная радуга
 
 void paint_the_tape_in(){  // покарсить всё в один цвет
   for (int i = 0; i < NUM_LEDS; i++) {
-    if (mode != 4){clearLed(); break;}
-    leds[i] = CRGB(255, 0, 250); 
+    if (mode != 4){
+      //clearLed(); 
+      break;
+    }
+    leds[i] = CRGB(0x53, 0x25, 0xA4); 
     FastLED.setBrightness(hell);
     readEncod();
     readSlider();
@@ -147,7 +162,9 @@ void paint_the_tape_in(){  // покарсить всё в один цвет
 void running_lights(){ // бегущие огни
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 256; j++) {
-      if (mode != 5){clearLed(); break;}
+      if (mode != 5){
+        //clearLed(); 
+        break;}
       readEncod();
       readSlider();
       sendValues();
@@ -160,7 +177,10 @@ void running_lights(){ // бегущие огни
       FastLED.show();
     }
     for (int j = 255; j >= 0; j--) {
-      if (mode != 5){clearLed(); break;}
+      if (mode != 5){
+        //clearLed(); 
+        break;
+      }
       readEncod();
       readSlider();
       sendValues();
@@ -278,11 +298,13 @@ void readSlider(){ // прочитать значение со слайдеро�
   ReadSlider3 = analogRead(A6);
   ReadSlider4 = analogRead(A7);
   
-  ReadSlider0 = map( ReadSlider0, 3, 1023, 0, 100);
-  ReadSlider1 = map( ReadSlider1, 3, 1023, 0, 100);
-  ReadSlider2 = map( ReadSlider2, 3, 1023, 0, 100);
-  ReadSlider3 = map( ReadSlider3, 3, 1023, 0, 100);
-  ReadSlider4 = map( ReadSlider4, 3, 1023, 0, 100);
+  
+  ReadSlider0 = map( ReadSlider0, 5, 1010, 0, 100);
+  ReadSlider1 = map( ReadSlider1, 5, 1010, 0, 100);
+  ReadSlider2 = map( ReadSlider2, 5, 1010, 0, 100);
+  ReadSlider3 = map( ReadSlider3, 5, 1010, 0, 100);
+  ReadSlider4 = map( ReadSlider4, 5, 1010, 0, 100);
+  
 
   ReadSlider0 = constrain( ReadSlider0, 0, 100);
   ReadSlider1 = constrain( ReadSlider1, 0, 100);
@@ -290,25 +312,30 @@ void readSlider(){ // прочитать значение со слайдеро�
   ReadSlider3 = constrain( ReadSlider3, 0, 100);
   ReadSlider4 = constrain( ReadSlider4, 0, 100);
 
-  if (MaxSlider0 <= ReadSlider0){ MaxSlider0 = ReadSlider0;}
-  if (MaxSlider1 <= ReadSlider1){ MaxSlider1 = ReadSlider1;}
-  if (MaxSlider2 <= ReadSlider2){ MaxSlider2 = ReadSlider2;}
-  if (MaxSlider3 <= ReadSlider3){ MaxSlider3 = ReadSlider3;}
-  if (MaxSlider4 <= ReadSlider4){ MaxSlider4 = ReadSlider4;}
-
-  if (MaxSlider0 > ReadSlider0 && MaxSlider0 - ReadSlider0 > 1){ MaxSlider0 = ReadSlider0;}
-  if (MaxSlider1 > ReadSlider1 && MaxSlider1 - ReadSlider1 > 1){ MaxSlider1 = ReadSlider1;}
-  if (MaxSlider2 > ReadSlider2 && MaxSlider2 - ReadSlider2 > 1){ MaxSlider2 = ReadSlider2;}
-  if (MaxSlider3 > ReadSlider3 && MaxSlider3 - ReadSlider3 > 1){ MaxSlider3 = ReadSlider3;}
-  if (MaxSlider4 > ReadSlider4 && MaxSlider4 - ReadSlider4 > 1){ MaxSlider4 = ReadSlider4;}
+  kol_ReadSlider++;
+  sum_ReadSlider0 += ReadSlider0;
+  sum_ReadSlider1 += ReadSlider1;
+  sum_ReadSlider2 += ReadSlider2;
+  sum_ReadSlider3 += ReadSlider3;
+  sum_ReadSlider4 += ReadSlider4;
+  
 
 
-  Slider0 = String(int(MaxSlider0)); 
-  Slider1 = String(int(MaxSlider1)); 
-  Slider2 = String(int(MaxSlider2)); 
-  Slider3 = String(int(MaxSlider3)); 
-  Slider4 = String(int(MaxSlider4)); 
+}
 
+void sendValues(){ // отправить значение в порте если они были изменены
+  ser_ReadSlider0 = (sum_ReadSlider0 + 2) / kol_ReadSlider;
+  ser_ReadSlider1 = (sum_ReadSlider1 + 2) / kol_ReadSlider;
+  ser_ReadSlider2 = (sum_ReadSlider2 + 2) / kol_ReadSlider;
+  ser_ReadSlider3 = (sum_ReadSlider3 + 2) / kol_ReadSlider;
+  ser_ReadSlider4 = (sum_ReadSlider4 + 2) / kol_ReadSlider;
+
+
+  Slider0 = String(ser_ReadSlider0);
+  Slider1 = String(ser_ReadSlider1);
+  Slider2 = String(ser_ReadSlider2);
+  Slider3 = String(ser_ReadSlider3);
+  Slider4 = String(ser_ReadSlider4);
 
   if (Slider0.length() == 2){Slider0 = "0" + Slider0;} if (Slider0.length() == 1){Slider0 = "00" + Slider0;}
   if (Slider1.length() == 2){Slider1 = "0" + Slider1;} if (Slider1.length() == 1){Slider1 = "00" + Slider1;}
@@ -316,23 +343,22 @@ void readSlider(){ // прочитать значение со слайдеро�
   if (Slider3.length() == 2){Slider3 = "0" + Slider3;} if (Slider3.length() == 1){Slider3 = "00" + Slider3;}
   if (Slider4.length() == 2){Slider4 = "0" + Slider4;} if (Slider4.length() == 1){Slider4 = "00" + Slider4;}
 
-
-}
-
-void sendValues(){ // отправить значение в порте если они были изменены
   FulEnc = "|" + Slider0 + "|" + Slider1 + "|" + Slider2 + "|" + Slider3 + "|" + Slider4 + "|" + fixVal[0] + "|" + fixVal[1] + "|" + fixVal[2] + "|" + fixVal[3] + "|";
   if (millis() - timer > 150){ //таймер на 100мл
     timer = millis();
+    
+    kol_ReadSlider = 0;
+    sum_ReadSlider0 = 0;
+    sum_ReadSlider1 = 0;
+    sum_ReadSlider2 = 0;
+    sum_ReadSlider3 = 0; 
+    sum_ReadSlider4 = 0; 
     if (FulEnc != FulEnclast) { //проверка на изменение
       Serial.println(FulEnc); //отправка данных
       FulEnclast = FulEnc;
       val[3] = 0;
+
       timer_Slider = millis();
-      MaxSlider0 = 0;
-      MaxSlider1 = 0;
-      MaxSlider2 = 0;
-      MaxSlider3 = 0;
-      MaxSlider4 = 0;
       
     }
   }  
@@ -394,8 +420,5 @@ void loop() {
 }
 /*
 сделать:
--один энкодер отдать на регулировку подсветки 
--одно нажатие это зайти в настройки режима и при последующем вращении менять его при повторном нажатии сохранить режим в память чтобюы при следующем запуске остался он
--врашение с нажатой кнопкой изменяет яркость
-*/
 
+*/
