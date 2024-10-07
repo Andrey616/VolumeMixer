@@ -45,9 +45,9 @@ namespace ArduinoSerialReader
                                 {
                                     
                                     ScriptScope val = engine.CreateScope();
-
+                                    /* 100|100|100|100|100|100|100|100 */
                                     engine.ExecuteFile("Volum.py", val);
-                                    dynamic pow = val.GetVariable("ma");
+                                    dynamic pow = val.GetVariable("main");
                                     dynamic rez = pow(data);
                                     //Console.WriteLine(rez);
                                     

@@ -51,6 +51,10 @@
             "System.IO.Ports": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "System.Threading.Tasks": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [
