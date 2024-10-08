@@ -17,86 +17,89 @@ namespace ArduinoSerialReader
             StreamWriter pythonInput = null;
             StreamReader pythonOutput = null;
 
-            try
+            while (true)
             {
-                // Настройка процесса Python
-                ProcessStartInfo psi = new ProcessStartInfo
+                try
                 {
-                    FileName = "python", // Убедись, что python доступен в PATH
-                    Arguments = "Volum.py",
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-
-                pythonProcess = new Process { StartInfo = psi };
-                pythonProcess.Start();
-
-                pythonInput = pythonProcess.StandardInput;
-                pythonOutput = pythonProcess.StandardOutput;
-
-                // Асинхронное чтение ошибок Python
-                pythonProcess.ErrorDataReceived += (sender, e) =>
-                {
-                    if (!string.IsNullOrEmpty(e.Data))
+                    // Настройка процесса Python
+                    ProcessStartInfo psi = new ProcessStartInfo
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Python Error: {e.Data}");
-                        Console.ResetColor();
-                    }
-                };
-                pythonProcess.BeginErrorReadLine();
+                        FileName = "python", // Убедись, что python доступен в PATH
+                        Arguments = "Volum.py",
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
 
-                connected = true;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Подключение к Arduino успешно установлено.");
-                Console.WriteLine("Полученные данные от Arduino...");
-                Console.ResetColor();
+                    pythonProcess = new Process { StartInfo = psi };
+                    pythonProcess.Start();
 
-                using (SerialPort serialPort = new SerialPort(portName, baudRate))
-                {
-                    serialPort.Open();
+                    pythonInput = pythonProcess.StandardInput;
+                    pythonOutput = pythonProcess.StandardOutput;
 
-                    while (true)
+                    // Асинхронное чтение ошибок Python
+                    pythonProcess.ErrorDataReceived += (sender, e) =>
                     {
-                        string data = serialPort.ReadLine();
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.SetCursorPosition(0, Console.CursorTop);
-                        Console.Write(new string(' ', Console.WindowWidth - 1));
-                        Console.SetCursorPosition(0, Console.CursorTop);
-                        Console.Write(data);
+                        if (!string.IsNullOrEmpty(e.Data))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Python Error: {e.Data}");
+                            Console.ResetColor();
+                        }
+                    };
+                    pythonProcess.BeginErrorReadLine();
 
-                        // Отправка данных в Python
-                        await pythonInput.WriteLineAsync(data);
-                        await pythonInput.FlushAsync();
+                    connected = true;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Подключение к Arduino успешно установлено.");
+                    Console.WriteLine("Полученные данные от Arduino...");
+                    Console.ResetColor();
+
+                    using (SerialPort serialPort = new SerialPort(portName, baudRate))
+                    {
+                        serialPort.Open();
+
+                        while (true)
+                        {
+                            string data = serialPort.ReadLine();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.SetCursorPosition(0, Console.CursorTop);
+                            Console.Write(new string(' ', Console.WindowWidth - 1));
+                            Console.SetCursorPosition(0, Console.CursorTop);
+                            Console.Write(data);
+
+                            // Отправка данных в Python
+                            await pythonInput.WriteLineAsync(data);
+                            await pythonInput.FlushAsync();
 
 
 
 
 
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Ошибка подключения: {ex.Message}");
-                Console.WriteLine($"Повторная попытка подключения...");
-                System.Threading.Thread.Sleep(1000);
-                Console.Clear();
-                // Можно реализовать повторную попытку подключения здесь
-            }
-            finally
-            {
-                if (pythonProcess != null && !pythonProcess.HasExited)
+                catch (Exception ex)
                 {
-                    pythonProcess.Kill();
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"Ошибка подключения: {ex.Message}");
+                    Console.WriteLine($"Повторная попытка подключения...");
+                    System.Threading.Thread.Sleep(1000);
+                    Console.Clear();
+                    // Можно реализовать повторную попытку подключения здесь
                 }
-            }
+                finally
+                {
+                    if (pythonProcess != null && !pythonProcess.HasExited)
+                    {
+                        pythonProcess.Kill();
+                    }
+                }
 
+            }
         }
     }
 }

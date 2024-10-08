@@ -150,7 +150,7 @@ void paint_the_tape_in(){  // покарсить всё в один цвет
       //clearLed(); 
       break;
     }
-    leds[i] = CRGB(0x53, 0x25, 0xA4); 
+    leds[i] = CRGB(255, 0, 255); 
     FastLED.setBrightness(hell);
     readEncod();
     readSlider();
