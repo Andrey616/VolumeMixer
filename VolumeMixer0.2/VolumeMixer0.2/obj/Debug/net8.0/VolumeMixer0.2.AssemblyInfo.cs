@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VolumeMixer0.2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ccca2ac39e76267be24b55952fcb241e740af03")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+659747e5228460453df5e00e8dc8116094adaae9")]
 [assembly: System.Reflection.AssemblyProductAttribute("VolumeMixer0.2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VolumeMixer0.2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
