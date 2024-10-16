@@ -14,7 +14,7 @@ media = [" ", "", "Telegram.exe", "firefox.exe", "Discord.exe", "", "", ""]
 def main(data):
     data = data.strip().split('|')
     data = data[1:-1:]
-    if len(data) > 8:
+    if len(data) == 9:
         global keyEnc5, keyEnc6, keyEnc7
         sessions = AudioUtilities.GetAllSessions()
         for session in sessions:
